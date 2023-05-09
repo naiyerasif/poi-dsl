@@ -22,6 +22,9 @@
 **/nbdist
 **/.nb-gradle
 
+# mac
+**/.DS_Store
+
 # node
 **/node_modules
 

@@ -1,42 +1,68 @@
 package dev.mflash.poi.dsl;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.Hyperlink;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public final class PoiCellWriter {
+public class PoiCellWriter {
 
 	private final Cell cell;
 
-	public PoiCellWriter(Sheet sheet, CellReference cellReference) {
-		final Cell c = sheet.getRow(cellReference.getRow()).getCell(cellReference.getCol());
-		this.cell = Objects.nonNull(c) ? c : sheet.getRow(cellReference.getRow()).createCell(cellReference.getCol());
+	PoiCellWriter(Supplier<Cell> cellSupplier) {
+		this.cell = cellSupplier.get();
 	}
 
-	public void stringValue(String value) {
-		cell.setCellValue(value);
+	public static PoiCellWriter create(Supplier<Cell> cellSupplier) {
+		return new PoiCellWriter(cellSupplier);
 	}
 
-	public void booleanValue(boolean value) {
-		cell.setCellValue(value);
+	public PoiCellWriter style(CellStyle cellStyle) {
+		cell.setCellStyle(cellStyle);
+		return this;
 	}
 
-	public void dateTimeValue(LocalDateTime value) {
+	public PoiCellWriter value(String value) {
 		cell.setCellValue(value);
+		return this;
 	}
 
-	public void integerValue(int value) {
+	public PoiCellWriter value(boolean value) {
 		cell.setCellValue(value);
+		return this;
 	}
 
-	public void longValue(long value) {
+	public PoiCellWriter value(LocalDateTime value) {
 		cell.setCellValue(value);
+		return this;
 	}
 
-	public void doubleValue(double value) {
+	public PoiCellWriter value(double value) {
 		cell.setCellValue(value);
+		return this;
+	}
+
+	public PoiCellWriter blank() {
+		cell.setBlank();
+		return this;
+	}
+
+	public PoiCellWriter hyperlink(Hyperlink hyperlink) {
+		cell.setHyperlink(hyperlink);
+		return this;
+	}
+
+	public PoiCellWriter comment(Comment comment) {
+		cell.setCellComment(comment);
+		return this;
+	}
+
+	public PoiCellWriter compute(Consumer<Cell> cellConsumer) {
+		cellConsumer.accept(cell);
+		return this;
 	}
 }

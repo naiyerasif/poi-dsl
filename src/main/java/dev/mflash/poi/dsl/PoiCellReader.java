@@ -1,34 +1,37 @@
 package dev.mflash.poi.dsl;
 
-import com.github.sisyphsu.dateparser.DateParser;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.ss.usermodel.DateUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.function.Supplier;
 
-public final class PoiCellReader {
+public class PoiCellReader {
 
-	private static final DataFormatter _dataFormatter = new DataFormatter();
-	private static final DateParser _dateParser = DateParser.newBuilder().build();
+	private static final DataFormatter _DATA_FORMATTER = new DataFormatter();
 
 	private final Cell cell;
 
-	public PoiCellReader(Sheet sheet, CellReference cellReference) {
-		this.cell = sheet.getRow(cellReference.getRow()).getCell(cellReference.getCol());
+	PoiCellReader(Supplier<Cell> cellSupplier) {
+		this.cell = cellSupplier.get();
 	}
 
-	public Cell cell() {
-		return cell;
+	public static PoiCellReader create(Supplier<Cell> cellSupplier) {
+		return new PoiCellReader(cellSupplier);
 	}
 
 	public String stringValue() {
 		return cell.getCellType().equals(CellType.STRING) ?
-				cell.getStringCellValue() :
-				_dataFormatter.formatCellValue(cell);
+				cell.getStringCellValue() : _DATA_FORMATTER.formatCellValue(cell);
+	}
+
+	public String stringValue(DateTimeFormatter dateTimeFormatter) {
+		return cell.getCellType().equals(CellType.NUMERIC) && DateUtil.isCellDateFormatted(cell) ?
+				dateTimeValue().format(dateTimeFormatter) : stringValue();
 	}
 
 	public boolean booleanValue() {
@@ -40,11 +43,7 @@ public final class PoiCellReader {
 	}
 
 	public LocalDateTime dateTimeValue() {
-		try {
-			return cell.getLocalDateTimeCellValue();
-		} catch (Exception __) {
-			return _dateParser.parseDateTime(stringValue().strip());
-		}
+		return cell.getLocalDateTimeCellValue();
 	}
 
 	public BigDecimal numericValue() {

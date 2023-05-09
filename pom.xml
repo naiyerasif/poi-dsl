@@ -6,7 +6,8 @@
 
 	<groupId>dev.mflash</groupId>
 	<artifactId>poi-dsl</artifactId>
-	<version>1.0.0-SNAPSHOT.1</version>
+	<version>1.0.0-SNAPSHOT.2</version>
+
 	<properties>
 		<encoding>UTF-8</encoding>
 		<project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
@@ -14,7 +15,7 @@
 		<java.version>17</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<junit.version>5.9.0</junit.version>
+		<junit.version>5.9.3</junit.version>
 	</properties>
 
 	<dependencies>
@@ -23,16 +24,11 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.2.3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.github.sisyphsu</groupId>
-			<artifactId>dateparser</artifactId>
-			<version>1.0.11</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>3.23.1</version>
+			<version>3.24.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -54,7 +50,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M7</version>
+				<version>3.0.0</version>
 			</plugin>
 		</plugins>
 	</build>

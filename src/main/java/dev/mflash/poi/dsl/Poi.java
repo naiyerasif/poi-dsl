@@ -1,71 +1,41 @@
 package dev.mflash.poi.dsl;
 
+import dev.mflash.poi.dsl.utils.PoiUtils;
+import dev.mflash.poi.dsl.value.PoiCellAttributes;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-public class Poi {
+public interface Poi {
 
-	private final Workbook workbook;
-	private Sheet sheet;
-
-	private Poi(Workbook workbook) {
-		this.workbook = workbook;
+	static PoiSheetQuery workbook(Workbook workbook) {
+		return new PoiSheetQuery(workbook);
 	}
 
-	public static PoiSheetSetup workbook(Workbook workbook) {
-		return new PoiSheetSetup(new Poi(workbook));
-	}
+	record PoiSheetQuery(Workbook workbook) {
 
-	public static final class PoiSheetSetup {
-		private final Poi poi;
-
-		private PoiSheetSetup(Poi poi) {
-			this.poi = poi;
-		}
-
-		public PoiOperationSetup sheetName(String sheetName) {
-			poi.sheet = poi.workbook.getSheet(sheetName);
-			return new PoiOperationSetup(poi);
+		public PoiOperations sheetName(String sheetName) {
+			return new PoiOperations(workbook.getSheet(sheetName));
 		}
 	}
 
-	public static final class PoiOperationSetup {
-		private final Poi poi;
+	record PoiOperations(Sheet sheet) {
 
-		private PoiOperationSetup(Poi poi) {
-			this.poi = poi;
+		public PoiCellReader read(PoiCellAttributes cellAttributes) {
+			return PoiCellReader.create(() -> {
+				final var row = sheet.getRow(cellAttributes.rowIndex());
+				return cellAttributes.missingCellPolicy() != null ?
+						row.getCell(cellAttributes.columnIndex(), cellAttributes.missingCellPolicy()) :
+						row.getCell(cellAttributes.columnIndex());
+			});
 		}
 
-		public PoiCellReader readAt(PoiCellRef cellRef) {
-			return new PoiCellReader(poi.sheet, cellRef.cellReference());
-		}
-
-		public PoiColumnReader readColumns(PoiAreaRef areaRef) {
-			return new PoiColumnReader(poi.sheet, areaRef.columnReference());
-		}
-
-		public PoiColumnReader readColumns(PoiAreaRef areaRef, int columnIndex) {
-			return new PoiColumnReader(poi.sheet, areaRef.columnReference(columnIndex));
-		}
-
-		public PoiAreaReader readAll(PoiAreaRef areaRef) {
-			return new PoiAreaReader(poi.sheet, areaRef.areaReference());
-		}
-
-		public PoiCellWriter writeAt(PoiCellRef cellRef) {
-			return new PoiCellWriter(poi.sheet, cellRef.cellReference());
-		}
-
-		public PoiColumnWriter writeColumns(PoiAreaRef areaRef) {
-			return new PoiColumnWriter(poi.sheet, areaRef.columnReference());
-		}
-
-		public PoiColumnWriter writeColumns(PoiAreaRef areaRef, int columnIndex) {
-			return new PoiColumnWriter(poi.sheet, areaRef.columnReference(columnIndex));
-		}
-
-		public PoiAreaWriter writeAll(PoiAreaRef areaRef) {
-			return new PoiAreaWriter(poi.sheet, areaRef.areaReference());
+		public PoiCellWriter write(PoiCellAttributes cellAttributes) {
+			return PoiCellWriter.create(() -> {
+				final var row = PoiUtils.getRow(cellAttributes.rowIndex(), sheet);
+				return cellAttributes.cellType() != null ?
+						PoiUtils.getCell(cellAttributes.columnIndex(), row, cellAttributes.cellType()) :
+						PoiUtils.getCell(cellAttributes.columnIndex(), row);
+			});
 		}
 	}
 }
