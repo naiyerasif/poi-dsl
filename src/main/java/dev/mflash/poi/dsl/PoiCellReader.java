@@ -16,12 +16,12 @@ public class PoiCellReader {
 
 	private final Cell cell;
 
-	PoiCellReader(Supplier<Cell> cellSupplier) {
-		this.cell = cellSupplier.get();
+	PoiCellReader(Cell cell) {
+		this.cell = cell;
 	}
 
 	public static PoiCellReader create(Supplier<Cell> cellSupplier) {
-		return new PoiCellReader(cellSupplier);
+		return new PoiCellReader(cellSupplier.get());
 	}
 
 	public String stringValue() {

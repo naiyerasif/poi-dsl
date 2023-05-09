@@ -13,12 +13,12 @@ public class PoiCellWriter {
 
 	private final Cell cell;
 
-	PoiCellWriter(Supplier<Cell> cellSupplier) {
-		this.cell = cellSupplier.get();
+	PoiCellWriter(Cell cell) {
+		this.cell = cell;
 	}
 
 	public static PoiCellWriter create(Supplier<Cell> cellSupplier) {
-		return new PoiCellWriter(cellSupplier);
+		return new PoiCellWriter(cellSupplier.get());
 	}
 
 	public PoiCellWriter style(CellStyle cellStyle) {
