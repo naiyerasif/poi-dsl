@@ -30,6 +30,8 @@ public record PoiCellAttributes(
 		private CellType cellType = CellType.BLANK;
 		private Row.MissingCellPolicy missingCellPolicy;
 
+		private PoiCellAttributesBuilder() {}
+
 		public PoiCellAttributesBuilder reference(CellReference cellReference) {
 			this.cellReference = cellReference;
 			return this;
