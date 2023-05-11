@@ -6,21 +6,11 @@ import org.apache.poi.ss.util.CellReference;
 public record PoiCellAttributes(
 		CellReference cellReference,
 		CellType cellType,
-		CellStyle cellStyle,
-		Hyperlink hyperlink,
-		Comment comment,
 		Row.MissingCellPolicy missingCellPolicy
 ) {
 
 	PoiCellAttributes(PoiCellAttributesBuilder builder) {
-		this(
-				builder.cellReference,
-				builder.cellType,
-				builder.cellStyle,
-				builder.hyperlink,
-				builder.comment,
-				builder.missingCellPolicy
-		);
+		this(builder.cellReference, builder.cellType, builder.missingCellPolicy);
 	}
 
 	public int rowIndex() {
@@ -38,9 +28,6 @@ public record PoiCellAttributes(
 	public static final class PoiCellAttributesBuilder {
 		private CellReference cellReference = new CellReference(0, 0);
 		private CellType cellType = CellType.BLANK;
-		private CellStyle cellStyle;
-		private Hyperlink hyperlink;
-		private Comment comment;
 		private Row.MissingCellPolicy missingCellPolicy;
 
 		public PoiCellAttributesBuilder reference(CellReference cellReference) {
@@ -58,21 +45,6 @@ public record PoiCellAttributes(
 
 		public PoiCellAttributesBuilder cellType(CellType cellType) {
 			this.cellType = cellType;
-			return this;
-		}
-
-		public PoiCellAttributesBuilder cellStyle(CellStyle cellStyle) {
-			this.cellStyle = cellStyle;
-			return this;
-		}
-
-		public PoiCellAttributesBuilder hyperlink(Hyperlink hyperlink) {
-			this.hyperlink = hyperlink;
-			return this;
-		}
-
-		public PoiCellAttributesBuilder comment(Comment comment) {
-			this.comment = comment;
 			return this;
 		}
 
