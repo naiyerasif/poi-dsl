@@ -4,9 +4,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.util.CellUtil;
 
 import java.time.LocalDateTime;
-import java.util.function.Consumer;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class PoiCellWriter {
@@ -21,32 +22,42 @@ public class PoiCellWriter {
 		return new PoiCellWriter(cellSupplier.get());
 	}
 
+	public PoiCellWriter styleProperty(String propKey, Object propValue) {
+		CellUtil.setCellStyleProperty(cell, propKey, propValue);
+		return this;
+	}
+
+	public PoiCellWriter styleProperties(Map<String, Object> props) {
+		CellUtil.setCellStyleProperties(cell, props);
+		return this;
+	}
+
 	public PoiCellWriter style(CellStyle cellStyle) {
 		cell.setCellStyle(cellStyle);
 		return this;
 	}
 
-	public PoiCellWriter value(String value) {
+	public PoiCellWriter stringValue(String value) {
 		cell.setCellValue(value);
 		return this;
 	}
 
-	public PoiCellWriter value(boolean value) {
+	public PoiCellWriter booleanValue(boolean value) {
 		cell.setCellValue(value);
 		return this;
 	}
 
-	public PoiCellWriter value(LocalDateTime value) {
+	public PoiCellWriter dateTimeValue(LocalDateTime value) {
 		cell.setCellValue(value);
 		return this;
 	}
 
-	public PoiCellWriter value(double value) {
+	public PoiCellWriter numericValue(double value) {
 		cell.setCellValue(value);
 		return this;
 	}
 
-	public PoiCellWriter blank() {
+	public PoiCellWriter blankValue() {
 		cell.setBlank();
 		return this;
 	}
@@ -58,11 +69,6 @@ public class PoiCellWriter {
 
 	public PoiCellWriter comment(Comment comment) {
 		cell.setCellComment(comment);
-		return this;
-	}
-
-	public PoiCellWriter compute(Consumer<Cell> cellConsumer) {
-		cellConsumer.accept(cell);
 		return this;
 	}
 }
