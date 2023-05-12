@@ -6,7 +6,7 @@
 
 	<groupId>dev.mflash</groupId>
 	<artifactId>poi-dsl</artifactId>
-	<version>1.0.0-SNAPSHOT.8</version>
+	<version>1.0.0-SNAPSHOT.9</version>
 
 	<properties>
 		<encoding>UTF-8</encoding>
