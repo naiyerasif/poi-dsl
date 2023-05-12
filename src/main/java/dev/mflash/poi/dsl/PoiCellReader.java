@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Supplier;
 
-public class PoiCellReader {
+public final class PoiCellReader {
 
 	private static final DataFormatter _DATA_FORMATTER = new DataFormatter();
 

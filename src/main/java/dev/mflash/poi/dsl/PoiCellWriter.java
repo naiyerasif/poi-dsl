@@ -8,9 +8,10 @@ import org.apache.poi.ss.util.CellUtil;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class PoiCellWriter {
+public final class PoiCellWriter {
 
 	private final Cell cell;
 
@@ -20,6 +21,11 @@ public class PoiCellWriter {
 
 	public static PoiCellWriter create(Supplier<Cell> cellSupplier) {
 		return new PoiCellWriter(cellSupplier.get());
+	}
+
+	public PoiCellWriter map(Consumer<Cell> cellMapper) {
+		cellMapper.accept(cell);
+		return this;
 	}
 
 	public PoiCellWriter styleProperty(String propKey, Object propValue) {
